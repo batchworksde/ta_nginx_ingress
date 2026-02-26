@@ -11,9 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Package app
+        run: |
+          mkdir -p build
+          tar czf build/ta_nginx_ingress.tar.gz --exclude=.git --exclude=.github --exclude=build -C .. ta_nginx_ingress
+
       - uses: splunk/appinspect-cli-action@v1
         with:
-          app_path: .
+          app_path: build/ta_nginx_ingress.tar.gz
 
       - uses: actions/upload-artifact@v4
         if: always()
