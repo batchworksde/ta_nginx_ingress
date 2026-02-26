@@ -1,0 +1,22 @@
+name: Splunk AppInspect
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+jobs:
+  appinspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: splunk/appinspect-cli-action@v1
+        with:
+          app_path: .
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: appinspect-results
+          path: appinspect_result.json
