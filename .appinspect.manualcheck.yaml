@@ -1,0 +1,24 @@
+check_for_known_vulnerabilities_in_third_party_libraries:
+  comment: ''
+check_for_reverse_shells:
+  comment: ''
+check_external_data_sources:
+  comment: ''
+check_splunk_logo:
+  comment: ''
+check_authorization_credentials:
+  comment: ''
+check_embedded_links:
+  comment: ''
+check_fs_writes:
+  comment: ''
+check_dependencies:
+  comment: ''
+check_documented_included_open_source:
+  comment: ''
+check_editing_and_proofreading:
+  comment: ''
+check_requires_access_to_files_outside_apps_dir:
+  comment: ''
+check_link_includes_contact_info:
+  comment: ''
