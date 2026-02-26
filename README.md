@@ -90,3 +90,4 @@ kubectl patch daemonset rke2-ingress-nginx-controller -n kube-system \
   --type merge \
   -p '{"spec":{"template":{"metadata":{"annotations":{"splunk.com/sourcetype":"nginx:ingress:access"}}}}}'
 ```
+
