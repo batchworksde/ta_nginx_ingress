@@ -35,12 +35,12 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           PACKAGE_NAME="${APP_NAME}-${VERSION}.spl"
           mkdir -p build/${APP_NAME}
-          rsync -a \
-            --exclude='.git' --exclude='.github' --exclude='.claude' \
-            --exclude='build' --exclude='.gitignore' \
-            --exclude='*.spl' --exclude='*.tar.gz' \
-            ./ build/${APP_NAME}/
-          tar czf "build/${PACKAGE_NAME}" -C build "${APP_NAME}"
+          rsync -rlt --progress . build/${PACKAGE_NAME} --exclude .git \
+            --exclude .gitignore \
+            --exclude .gitlab-ci.yml \
+            --exclude build \
+            --exclude .github \
+            --exclude .appinspect.manualcheck.yaml
           echo "package_name=${PACKAGE_NAME}" >> "$GITHUB_OUTPUT"
           echo "package_path=build/${PACKAGE_NAME}" >> "$GITHUB_OUTPUT"
 
@@ -49,8 +49,10 @@ jobs:
         with:
           app_path: ${{ steps.package.outputs.package_path }}
 
-      - name: Create GitHub Release
+      - name: Create GitHub Prerelease
         uses: softprops/action-gh-release@v2
         with:
           files: ${{ steps.package.outputs.package_path }}
           generate_release_notes: true
+          prerelease: true
+

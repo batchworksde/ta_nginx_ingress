@@ -14,7 +14,13 @@ jobs:
       - name: Package app
         run: |
           mkdir -p build
-          tar czf build/ta_nginx_ingress.tar.gz --exclude=.git --exclude=.github --exclude=build -C .. ta_nginx_ingress
+          tar czf build/ta_nginx_ingress.tar.gz --exclude=.git --exclude=.github --exclude=build --exclude=.appinspect.manualcheck.yaml -C .. ta_nginx_ingress
+          rsync -rlt --progress . build/ta_nginx_ingress.tar.gz --exclude .git \
+            --exclude .gitignore \
+            --exclude .gitlab-ci.yml \
+            --exclude build \
+            --exclude .github \
+            --exclude .appinspect.manualcheck.yaml
 
       - uses: splunk/appinspect-cli-action@v1
         with:
