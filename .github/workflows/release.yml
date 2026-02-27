@@ -41,6 +41,7 @@ jobs:
             --exclude build \
             --exclude .github \
             --exclude .appinspect.manualcheck.yaml
+          cd build && tar czf ${PACKAGE_NAME} ${APP_NAME}
           echo "package_name=${PACKAGE_NAME}" >> "$GITHUB_OUTPUT"
           echo "package_path=build/${PACKAGE_NAME}" >> "$GITHUB_OUTPUT"
 
