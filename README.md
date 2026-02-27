@@ -20,7 +20,7 @@ $remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$
 Example:
 
 ```
-10.244.0.1 - - [25/Feb/2026:10:30:15 +0000] "GET /api/v1/users HTTP/1.1" 200 1234 "https://example.com" "Mozilla/5.0" 456 0.032 [default-myapp-svc-80] [default-myapp-svc-80] 10.244.1.5:8080 1234 0.031 200 abc123def456
+IPv4IP - - [25/Feb/2026:10:30:15 +0000] "GET /api/v1/users HTTP/1.1" 200 1234 "https://example.com" "Mozilla/5.0" 456 0.032 [default-myapp-svc-80] [default-myapp-svc-80] IPv4IP:8080 1234 0.031 200 abc123def456
 ```
 
 ## Extracted Fields
@@ -90,3 +90,4 @@ kubectl patch daemonset rke2-ingress-nginx-controller -n kube-system \
   --type merge \
   -p '{"spec":{"template":{"metadata":{"annotations":{"splunk.com/sourcetype":"nginx:ingress:access"}}}}}'
 ```
+
