@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Verify version matches app.conf
+        run: |
+          APP_CONF_VERSION=$(grep -E '^version\s*=' default/app.conf | head -1 | sed 's/.*=\s*//')
+          TAG_VERSION="${{ steps.version.outputs.version }}"
+          if [ "$APP_CONF_VERSION" != "$TAG_VERSION" ]; then
+            echo "ERROR: Tag version ($TAG_VERSION) != app.conf version ($APP_CONF_VERSION)"
+            exit 1
+          fi
+
+      - name: Package Splunk app (.spl)
+        id: package
+        run: |
+          APP_NAME="ta_nginx_ingress"
+          VERSION="${{ steps.version.outputs.version }}"
+          PACKAGE_NAME="${APP_NAME}-${VERSION}.spl"
+          mkdir -p build/${APP_NAME}
+          rsync -rlt --progress . build/${PACKAGE_NAME} --exclude .git \
+            --exclude .gitignore \
+            --exclude .gitlab-ci.yml \
+            --exclude build \
+            --exclude .github \
+            --exclude .appinspect.manualcheck.yaml
+          echo "package_name=${PACKAGE_NAME}" >> "$GITHUB_OUTPUT"
+          echo "package_path=build/${PACKAGE_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Run AppInspect
+        uses: splunk/appinspect-cli-action@v1
+        with:
+          app_path: ${{ steps.package.outputs.package_path }}
+
+      - name: Create GitHub Prerelease
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.package.outputs.package_path }}
+          generate_release_notes: true
+          prerelease: true
+
