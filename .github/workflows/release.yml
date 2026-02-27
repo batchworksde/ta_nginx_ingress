@@ -35,7 +35,7 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           PACKAGE_NAME="${APP_NAME}-${VERSION}.spl"
           mkdir -p build/${APP_NAME}
-          rsync -rlt --progress . build/${PACKAGE_NAME} --exclude .git \
+          rsync -rlt --progress . build/${APP_NAME} --exclude .git \
             --exclude .gitignore \
             --exclude .gitlab-ci.yml \
             --exclude build \
